@@ -10,7 +10,7 @@ using System.Text;
         public string Model {get;set;}
         public int Year {get;set;}
         public string Type {get;set;}
-        public Guid Id { get; set; } = Guid.Empty;
+        public Guid Ids { get; set; } = Guid.Empty;
         public BaseModelValidationResult Validate()
         {
             var validationResult = new BaseModelValidationResult();
