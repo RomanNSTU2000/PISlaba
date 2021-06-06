@@ -11,59 +11,64 @@ namespace pavlovLab.Controllers
       [Route("api/[controller]")]
    [ApiController]
    public class LabController : ControllerBase
-   {
-       private static IStorage<LabData> _memCache = new MemCache();
+    {
+        private IStorage<LabData> _memCache;
 
-       [HttpGet]
-       public ActionResult<IEnumerable<LabData>> Get()
-       {
-           return Ok(_memCache.All);
-       }
+        public LabController(IStorage<LabData> memCache)
+        {
+            _memCache = memCache;
+        }
 
-       [HttpGet("{id}")]
-       public ActionResult<LabData> Get(Guid id)
-       {
-           if (!_memCache.Has(id)) return NotFound("No such");
+        [HttpGet]
+        public ActionResult<IEnumerable<LabData>> Get()
+        {
+            return Ok(_memCache.All);
+        }
 
-           return Ok(_memCache[id]);
-       }
+        [HttpGet("{id}")]
+        public ActionResult<LabData> Get(Guid id)
+        {
+            if (!_memCache.Has(id)) return NotFound("No such");
 
-       [HttpPost]
-       public IActionResult Post([FromBody] LabData value)
-       {
-           var validationResult = value.Validate();
+            return Ok(_memCache[id]);
+        }
 
-           if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+        [HttpPost]
+        public IActionResult Post([FromBody] LabData value)
+        {
+            var validationResult = value.Validate();
 
-           _memCache.Add(value);
+            if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
 
-           return Ok($"{value.ToString()} has been added");
-       }
+            _memCache.Add(value);
 
-       [HttpPut("{id}")]
-       public IActionResult Put(Guid id, [FromBody] LabData value)
-       {
-           if (!_memCache.Has(id)) return NotFound("No such");
+            return Ok($"{value.ToString()} has been added");
+        }
 
-           var validationResult = value.Validate();
+        [HttpPut("{id}")]
+        public IActionResult Put(Guid id, [FromBody] LabData value)
+        {
+            if (!_memCache.Has(id)) return NotFound("No such");
 
-           if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+            var validationResult = value.Validate();
 
-           var previousValue = _memCache[id];
-           _memCache[id] = value;
+            if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
 
-           return Ok($"{previousValue.ToString()} has been updated to {value.ToString()}");
-       }
+            var previousValue = _memCache[id];
+            _memCache[id] = value;
 
-       [HttpDelete("{id}")]
-       public IActionResult Delete(Guid id)
-       {
-           if (!_memCache.Has(id)) return NotFound("No such");
+            return Ok($"{previousValue.ToString()} has been updated to {value.ToString()}");
+        }
 
-           var valueToRemove = _memCache[id];
-           _memCache.RemoveAt(id);
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            if (!_memCache.Has(id)) return NotFound("No such");
 
-           return Ok($"{valueToRemove.ToString()} has been removed");
-       }
+            var valueToRemove = _memCache[id];
+            _memCache.RemoveAt(id);
+
+            return Ok($"{valueToRemove.ToString()} has been removed");
+        }
     }
 }
