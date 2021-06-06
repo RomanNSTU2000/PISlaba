@@ -1,4 +1,4 @@
-namespace PISlaba1.Models
+namespace pavlovLab.Models
 {
     public class Version
     {

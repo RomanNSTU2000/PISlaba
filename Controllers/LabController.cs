@@ -1,25 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
-using PISlaba1.Models;
-using PISlaba1.Storage;
+using pavlovLab.Models;
+using pavlovLab.Storage;
 
-namespace PISlaba1.Controllers
+namespace pavlovLab.Controllers
 {
-    [Route("api/[controller]")]
+      [Route("api/[controller]")]
    [ApiController]
- public class lab1Controller : ControllerBase
+   public class LabController : ControllerBase
     {
-        private static IStorage<Lab1Data> _memCache = new MemCache();
+        private IStorage<LabData> _memCache;
+
+        public LabController(IStorage<LabData> memCache)
+        {
+            _memCache = memCache;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Lab1Data>> Get()
+        public ActionResult<IEnumerable<LabData>> Get()
         {
             return Ok(_memCache.All);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Lab1Data> Get(Guid id)
+        public ActionResult<LabData> Get(Guid id)
         {
             if (!_memCache.Has(id)) return NotFound("No such");
 
@@ -27,7 +34,7 @@ namespace PISlaba1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Lab1Data value)
+        public IActionResult Post([FromBody] LabData value)
         {
             var validationResult = value.Validate();
 
@@ -39,7 +46,7 @@ namespace PISlaba1.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody] Lab1Data value)
+        public IActionResult Put(Guid id, [FromBody] LabData value)
         {
             if (!_memCache.Has(id)) return NotFound("No such");
 

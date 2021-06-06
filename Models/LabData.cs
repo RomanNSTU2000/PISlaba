@@ -1,16 +1,18 @@
 using System;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
- namespace PISlaba1.Models
+namespace pavlovLab.Models
 {
-    public class Lab1Data
+    public class LabData
     {
+        public Guid Id { get; set; } = Guid.Empty;
         public string SerialNumber {get;set;}
         public string Brand {get;set;}
         public string Model {get;set;}
         public int Year {get;set;}
         public string Type {get;set;}
-        public Guid Ids { get; set; } = Guid.Empty;
         public BaseModelValidationResult Validate()
         {
             var validationResult = new BaseModelValidationResult();
@@ -29,7 +31,4 @@ using System.Text;
               return $"{Brand} {Model} from {SerialNumber}-{Year}-{Type}";
          }               
     }
-   
-                
 }
-    

@@ -1,4 +1,4 @@
-namespace PISlaba1.Storage
+namespace pavlovLab.Storage
 {
     [System.Serializable]
     public class IncorrectLabDataException : System.Exception
