@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PISlaba1.Storage
+namespace pavlovLab.Storage
 {
     public interface IStorage<T> where T : class
     {

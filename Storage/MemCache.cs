@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PISlaba1.Models;
+using pavlovLab.Models;
 
-namespace PISlaba1.Storage
+namespace pavlovLab.Storage
 {
-    public class MemCache : IStorage<Lab1Data>
+    public class MemCache : IStorage<LabData>
     {
         private object _sync = new object();
-        private List<Lab1Data> _memCache = new List<Lab1Data>();
-        public Lab1Data this[Guid id] 
+        private List<LabData> _memCache = new List<LabData>();
+        public LabData this[Guid id] 
         { 
             get
             {
@@ -17,7 +17,7 @@ namespace PISlaba1.Storage
                 {
                     if (!Has(id)) throw new IncorrectLabDataException($"No LabData with id {id}");
 
-                    return _memCache.Single(x => x.Ids == id);
+                    return _memCache.Single(x => x.Id == id);
                 }
             }
             set
@@ -31,32 +31,32 @@ namespace PISlaba1.Storage
                         RemoveAt(id);
                     }
 
-                    value.Ids = id;
+                    value.Id = id;
                     _memCache.Add(value);
                 }
             }
         }
 
-        public System.Collections.Generic.List<Lab1Data> All => _memCache.Select(x => x).ToList();
+        public System.Collections.Generic.List<LabData> All => _memCache.Select(x => x).ToList();
 
-        public void Add(Lab1Data value)
+        public void Add(LabData value)
         {
-            if (value.Ids != Guid.Empty) throw new IncorrectLabDataException($"Cannot add value with predefined id {value.Ids}");
+            if (value.Id != Guid.Empty) throw new IncorrectLabDataException($"Cannot add value with predefined id {value.Id}");
 
-            value.Ids = Guid.NewGuid();
-            this[value.Ids] = value;
+            value.Id = Guid.NewGuid();
+            this[value.Id] = value;
         }
 
         public bool Has(Guid id)
         {
-            return _memCache.Any(x => x.Ids == id);
+            return _memCache.Any(x => x.Id == id);
         }
 
         public void RemoveAt(Guid id)
         {
             lock (_sync)
             {
-                _memCache.RemoveAll(x => x.Ids == id);
+                _memCache.RemoveAll(x => x.Id == id);
             }
         }
     }
